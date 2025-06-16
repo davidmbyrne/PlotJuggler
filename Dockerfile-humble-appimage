@@ -12,13 +12,13 @@ RUN mkdir -p /opt/linuxdeploy-plugin-qt
 
 WORKDIR /opt/ws_plotjuggler/src
 RUN git clone https://github.com/PlotJuggler/plotjuggler_msgs.git
-RUN git clone -b appimage-ros https://github.com/facontidavide/PlotJuggler.git
+RUN git clone --branch appimage-ros https://github.com/facontidavide/PlotJuggler.git
 RUN git clone https://github.com/PlotJuggler/plotjuggler-ros-plugins.git
 
 WORKDIR /opt/ws_plotjuggler
 
 RUN rosdep update && rosdep install -y --from-paths src --ignore-src
-RUN bash -c "source /opt/ros/humble/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DAPPIMAGE_BUILD=ON --symlink-install"
+RUN bash -c "source /opt/ros/humble/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DAPPIMAGE_BUILD=ON"
 RUN cp -v install/plotjuggler/lib/plotjuggler/* /opt/AppDir/usr/bin
 RUN cp -v install/plotjuggler_ros/lib/plotjuggler_ros/* /opt/AppDir/usr/bin
 
