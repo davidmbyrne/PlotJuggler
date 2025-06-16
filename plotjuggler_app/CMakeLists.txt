@@ -109,6 +109,10 @@ if (NOT WIN32)
     add_backward(plotjuggler)
 endif()
 
+if(APPIMAGE_BUILD)
+    target_add_definitions(plotjuggler PRIVATE APPIMAGE_BUILD)
+endif()
+
 target_include_directories(plotjuggler
     PRIVATE
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/3rdparty/color_widgets/include>

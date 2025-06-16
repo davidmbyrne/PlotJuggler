@@ -21,6 +21,7 @@ add_definitions(
 option(ENABLE_ASAN "Enable Address Sanitizer" OFF)
 option(BASE_AS_SHARED "Build the base library as a shared library" OFF)
 option(BUILDING_WITH_CONAN "Using Conan for dependencies" OFF)
+option(APPIMAGE_BUILD "Compiling for AppImage" OFF)
 
 IF (NOT WIN32 AND ENABLE_ASAN)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=address")

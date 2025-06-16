@@ -539,6 +539,7 @@ void MainWindow::loadAllPlugins(QStringList command_line_plugin_folders)
 
   builtin_folders += QCoreApplication::applicationDirPath();
 
+#ifndef APPIMAGE_BUILD
   try
   {
 #ifdef COMPILED_WITH_CATKIN
@@ -558,9 +559,8 @@ void MainWindow::loadAllPlugins(QStringList command_line_plugin_folders)
     }
 #endif
 #ifdef COMPILED_WITH_AMENT
-    auto ros2_path = QString::fromStdString(ament_index_cpp::get_package_prefix("plotjugg"
-                                                                                "ler_"
-                                                                                "ros"));
+    auto ros2_path = QString::fromStdString(  //
+        ament_index_cpp::get_package_prefix("plotjuggler_ros"));
     ros2_path += "/lib/plotjuggler_ros";
     loaded += initializePlugins(ros2_path);
 #endif
@@ -568,15 +568,15 @@ void MainWindow::loadAllPlugins(QStringList command_line_plugin_folders)
   catch (...)
   {
     QMessageBox::warning(nullptr, "Missing package [plotjuggler-ros]",
-                         "If you just upgraded from PlotJuggler 2.x to 3.x , try "
-                         "installing this package:\n\n"
+                         "You may need to install this package:\n\n"
                          "sudo apt install ros-${ROS_DISTRO}-plotjuggler-ros",
                          QMessageBox::Cancel, QMessageBox::Cancel);
   }
+#endif
 
   builtin_folders +=
-      QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/PlotJuggl"
-                                                                              "er";
+      QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +  //
+      "/PlotJuggler";
   builtin_folders.removeDuplicates();
 
   plugin_folders += builtin_folders;
@@ -626,6 +626,14 @@ QStringList MainWindow::initializePlugins(QString directory_name)
       qDebug() << QString("%1: skipping, because it threw the following exception: %2")
                       .arg(filename)
                       .arg(err.what());
+
+      if (filename.contains("DataStreamROS2"))
+      {
+        QMessageBox::warning(this, "Failed to load plugin [libDataStreamROS2]",
+                             "If this is an AppImage, you need to run  "
+                             "\"/opt/ros/<distro>/setup.bash\" first",
+                             QMessageBox::Cancel, QMessageBox::Cancel);
+      }
       continue;
     }
     if (plugin && dynamic_cast<PlotJugglerPlugin*>(plugin))
