@@ -110,7 +110,7 @@ if (NOT WIN32)
 endif()
 
 if(APPIMAGE_BUILD)
-    target_add_definitions(plotjuggler PRIVATE APPIMAGE_BUILD)
+    target_compile_definitions(plotjuggler PRIVATE APPIMAGE_BUILD)
 endif()
 
 target_include_directories(plotjuggler
